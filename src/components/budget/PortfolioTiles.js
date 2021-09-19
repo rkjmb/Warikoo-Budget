@@ -7,11 +7,12 @@ import { colorConfig } from '../../utils/budgetService';
 
 const PortfolioTiles = ({ classes, currentyear, portfolio, budget }) => {
     let data = [];
-    budget.map(({ income, raise, investements }, index) => {
+    budget.forEach(({ investements }, index) => {
         let x = []
-        x.push(<Year year={currentyear + index} data={investements} />)
-        portfolio.map(({ name, value }) => {
+        x.push(<Year key={index} year={currentyear + index} data={investements} />)
+        portfolio.forEach(({ name, value }, index1) => {
             x.push(<Card
+                key={index + index1 + 1}
                 type={2}
                 title={name}
                 data={Math.floor(investements * (value / 100))}
@@ -19,7 +20,7 @@ const PortfolioTiles = ({ classes, currentyear, portfolio, budget }) => {
             />)
 
         })
-        data.push(<div className={classes.cardslayout}>{x}</div>)
+        data.push(<div key={index} className={classes.cardslayout}>{x}</div>)
     })
     return data;
 }
