@@ -13,7 +13,7 @@ const BudgetTiles = ({ classes, budget, currentyear }) => {
                 index
             ) => (
                 <div key={index} className={classes.cardslayout}>
-                    <Year year={currentyear + index} raise={raise} />
+                    <Year year={currentyear + index} data={raise} showIcon />
                     <Income income={income} />
                     <Card
                         type={2}

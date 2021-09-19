@@ -16,13 +16,20 @@ import moment from 'moment';
 
 import budgetImage from '../../assets/budget/budget.svg'
 
+import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import InstagramIcon from '@material-ui/icons/Instagram';
+// import YouTubeIcon from '@material-ui/icons/YouTube';
+
+import { linkedInLink, instaLink } from '../../config/config'
+import { redirectToLink } from '../../utils/commonService'
+
 const MIN_AGE = 18;
 const MAX_AGE = 90;
 
 const useStyles = makeStyles((theme) => ({
     budget: {
         display: 'grid',
-        gridTemplateColumns: '8fr 4fr',
+        gridTemplateColumns: '7fr 5fr',
         [theme.breakpoints.down('xs')]: {
             gridTemplateColumns: '12fr',
             gridTemplateRows: '6fr 6fr'
@@ -46,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonWrapper: {
         textAlign: 'center'
+    },
+    footerIcons: {
+
     }
 }))
 
@@ -88,6 +98,10 @@ const Budget = () => {
         }
     }
 
+    const handleRedirect = (link) => {
+        redirectToLink(link, true)
+    }
+
     return (
         <div className={classes.budget}>
             <div className={classes.cover}>
@@ -99,7 +113,7 @@ const Budget = () => {
                 <TextField
                     size='small'
                     value={income}
-                    label='Enter your income'
+                    label='Enter your income (Annual)'
                     onChange={(e) => setincome(e.target.value)}
                     InputProps={{
                         inputComponent: NumberFormatCustom,
@@ -131,6 +145,21 @@ const Budget = () => {
                 </div>
             </div>
             <Dashboard income={income} age={currentyear - moment(selectedDate).year()} currentyear={currentyear} open={dashboard} setopen={setdashboard} />
+            <footer>
+                <div className='flex flex-center'>
+                    <Typography variant={'subtitle2'} gutterBottom>Developed by Rajkumar</Typography>
+                </div>
+                <div className='flex flex-center'>
+                    <IconButton color="primary" className={classes.socialicons} onClick={() => handleRedirect(linkedInLink)}>
+                        <LinkedInIcon style={{ color: '#0077b5' }} fontSize='large' />
+                    </IconButton>
+                    <IconButton color="primary" className={classes.socialicons} onClick={() => handleRedirect(instaLink)}>
+                        <InstagramIcon style={{ color: '#000000' }} fontSize='large' />
+                    </IconButton>
+
+
+                </div>
+            </footer>
         </div>
     )
 }

@@ -18,7 +18,7 @@ const BudgetGraph = ({ classes, budget, currentyear, totalEarnings, maturity }) 
                 margin={{
                     top: 5,
                     right: 30,
-                    left: 50,
+                    left: 20,
                     bottom: 5,
                 }}
             >
@@ -53,7 +53,7 @@ const BudgetGraph = ({ classes, budget, currentyear, totalEarnings, maturity }) 
                 margin={{
                     top: 5,
                     right: 30,
-                    left: 50,
+                    left: 20,
                     bottom: 5,
                 }}
             >
@@ -72,14 +72,15 @@ const BudgetGraph = ({ classes, budget, currentyear, totalEarnings, maturity }) 
                         suffix={` till ${y.payload.year}`}
                     />
                 }} />
-                <Bar type="monotone" dataKey="earnings" fill={colorConfig.earnings} formatter={(value) => <NumberFormat value={value} thousandsGroupStyle='lakh'
-                    displayType='text'
-                    thousandSeparator
-                    isNumericString
-                    prefix="₹"
-                    suffix={` in ${currentyear + maturity}`}
+                <Bar type="monotone" dataKey="earnings" fill={colorConfig.earnings} formatter={(value) =>
+                    <NumberFormat value={value} thousandsGroupStyle='lakh'
+                        displayType='text'
+                        thousandSeparator
+                        isNumericString
+                        prefix="₹"
+                        suffix={` in ${currentyear + maturity}`}
 
-                />} />
+                    />} />
             </BarChart>
         </>
         // </ResponsiveContainer>

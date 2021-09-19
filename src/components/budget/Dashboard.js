@@ -1,11 +1,12 @@
-import { useEffect, useState, forwardRef } from 'react'
+import { useState, forwardRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Container from '@material-ui/core/Container'
 import DialogContent from '@material-ui/core/DialogContent'
 import Slide from '@material-ui/core/Slide'
+
+import Container from '@material-ui/core/Container'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import Chip from '@material-ui/core/Chip';
@@ -19,8 +20,11 @@ import BudgetTiles from './BudgetTiles'
 import BudgetGraph from './BudgetGraph'
 import Portfolio from './Portfolio'
 
-import { views, colorConfig } from '../../utils/budgetService';
+import Modal from '../Modal';
+import InfoContent from './InfoContent'
 
+import { views, colorConfig } from '../../utils/budgetService';
+import useBudget from '../../utils/hooks/useBudget'
 
 const useStyles = makeStyles((theme) => ({
     dialogContent: {
@@ -51,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
         // position: 'sticky',
         // top: 0,
         background: '#eeeeee',
+        paddingBottom: '1em',
         zIndex: 1,
         [theme.breakpoints.down('sm')]: {
             borderRadius: '0 0 1em 1em ',
@@ -80,9 +85,8 @@ const useStyles = makeStyles((theme) => ({
         zIndex: 999
     },
     buttonsWrapper: {
-        '&>*+*': {
-            marginLeft: '0.25em',
-        }
+        display: 'flex',
+        justifyContent: 'space-between'
     },
     pieChartWrapper: {
         display: 'flex',
@@ -107,7 +111,19 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     statement: {
-        lineHeight: 2
+        lineHeight: 2,
+        [theme.breakpoints.down('xs')]: {
+            lineHeight: 2.25,
+        }
+    },
+    accordianDetails: {
+        display: 'block'
+    },
+    strategyWrapper: {
+        display: 'inline-flex'
+    },
+    infoIcon: {
+        paddingLeft: 0,
     }
 }))
 
@@ -117,99 +133,23 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const Dashboard = ({ income, age, open, setopen, currentyear }) => {
     const classes = useStyles()
-    const [budget, setbudget] = useState([])
-    const [term, setterm] = useState(10)
-    const [raisefactor, setraisefactor] = useState(0.1)
-    const [inverse, setinverse] = useState(true)
-    const [roi, setroi] = useState(0.15);
-    const [maturity, setmaturity] = useState(20);
-    const [totalInvestment, settotalInvestment] = useState(0);
-    const [totalEarnings, settotalEarnings] = useState({ siValue: 0, ciValue: 0 });
+
+    const { budget, params } = useBudget({ income, age, shouldCompute: open, currentyear })
+
+    const {
+        term, setterm,
+        raisefactor, setraisefactor,
+        inverse, setinverse,
+        inflation, setinflation,
+        roi, setroi,
+        maturity, setmaturity,
+        totalInvestment,
+        totalEarnings,
+        profile
+    } = params;
+
     const [viewType, setviewType] = useState(views['tiles']);
-    const [profile, setprofile] = useState(0);
-
-    useEffect(() => {
-        let newBudget = []
-        let newTotalInvestment = 0;
-
-        if (income && age && open) {
-            //Initial Year income
-            let needs = Math.floor(income * 0.5)
-            let wants = Math.floor(income * 0.3)
-            let investements = Math.floor(income * 0.2)
-
-            newBudget.push({
-                income: income,
-                raise: 0,
-                needs,
-                wants,
-                investements,
-                year: currentyear
-            })
-            newTotalInvestment += investements;
-
-            for (let i = 1; i < term; i++) {
-                let raise = Math.floor(raisefactor * newBudget[i - 1].income)
-                let compoundedIncome = Math.floor(
-                    Number(newBudget[i - 1].income) + Number(raise)
-                )
-                let needs = Math.floor(
-                    newBudget[i - 1].needs + Number(raise * (inverse ? 0.2 : 0.5))
-                )
-                let wants = Math.floor(
-                    newBudget[i - 1].wants + Number(raise * 0.3)
-                )
-                let investements = Math.floor(
-                    newBudget[i - 1].investements +
-                    Number(raise * (inverse ? 0.5 : 0.2))
-                )
-                newBudget.push({
-                    income: compoundedIncome,
-                    raise: raise,
-                    needs,
-                    wants,
-                    investements,
-                    year: currentyear + i
-                })
-                newTotalInvestment += investements;
-            }
-
-            let newTotalEarnings = 0;
-
-            let newSiBreakDown = [];
-            let newCiBreakDown = [];
-
-            let count = 1;
-            newBudget.map(({ investements }, index) => {
-                let monthlyInvestment = investements / 12;
-                let monthlyIntrest = roi / 12;
-                let totalMonths = maturity * 12;
-                for (let x = 1; x <= 12; x++) {
-                    const y = monthlyInvestment * Math.pow(1 + monthlyIntrest, totalMonths + 1 - count);
-                    count++;
-                    newTotalEarnings = newTotalEarnings + y;
-                }
-                newCiBreakDown.push({ year: Number(currentyear) + Number(index), investements, earnings: Math.ceil(newTotalEarnings) })
-                if (index > 0) {
-                    newCiBreakDown[index].investements += newCiBreakDown[index - 1].investements
-                }
-            })
-
-            setbudget(newBudget)
-            settotalInvestment(newTotalInvestment);
-            settotalEarnings({ siValue: 0, ciValue: Math.floor(newTotalEarnings), siBreakDown: newSiBreakDown, ciBreakDown: newCiBreakDown })
-        }
-    }, [open, age, income, term, inverse, raisefactor, roi, maturity, currentyear])
-
-    useEffect(() => {
-        let profile = 2; //Asume high risk
-        if (roi <= 0.1) {
-            profile = 0;
-        } else if (roi > 0.1 && roi <= 0.2) {
-            profile = 1;
-        }
-        setprofile(profile)
-    }, [age, roi])
+    const [info, setinfo] = useState(false)
 
     const handleClose = () => {
         if (setopen) {
@@ -223,6 +163,10 @@ const Dashboard = ({ income, age, open, setopen, currentyear }) => {
 
     const handleViewType = (viewType) => {
         setviewType(views[viewType])
+    }
+
+    const handleInfo = () => {
+        setinfo(!info)
     }
 
     return (
@@ -240,7 +184,7 @@ const Dashboard = ({ income, age, open, setopen, currentyear }) => {
                         </IconButton>
 
                     ) : null}
-                    <Typography variant='h5' display={'inline'}>Warikoo Budget for you </Typography>
+                    {'Warikoo Budget for you'}
                     {/* <Typography variant='h6' display={'inline'}>{`(${age} years)`}</Typography> */}
                 </DialogTitle>
                 <DialogContent className={classes.dialogContent}>
@@ -261,6 +205,9 @@ const Dashboard = ({ income, age, open, setopen, currentyear }) => {
                             setviewType={handleViewType}
                             profile={profile}
                             setprofile={handleSetprofile}
+                            inflation={inflation}
+                            setinflation={setinflation}
+                            handleInfo={handleInfo}
                         />
                         <div className={classes.statement}>
                             <Typography display='inline' gutterBottom>{`Your total investment of `}</Typography>
@@ -293,10 +240,16 @@ const Dashboard = ({ income, age, open, setopen, currentyear }) => {
                         <Typography className={classes.pageTitle} variant='h6' gutterBottom>{viewType.pageTitle}</Typography>
                         {viewType.value === 'graph' && <BudgetGraph classes={classes} budget={budget} currentyear={currentyear} totalEarnings={totalEarnings} maturity={maturity} />}
                         {viewType.value === 'tiles' && <BudgetTiles classes={classes} budget={budget} currentyear={currentyear} />}
-                        {viewType.value === 'portfolio' && <Portfolio classes={classes} budget={budget} classes={classes} profile={profile} currentyear={currentyear} />}
+                        {viewType.value === 'portfolio' && <Portfolio classes={classes} budget={budget} profile={profile} currentyear={currentyear} />}
                     </Container>
                 </DialogContent>
             </Dialog>
+            {info && <Modal
+                onClose={handleInfo}
+                open={info}
+                title={`Warikoo's Strategy`}
+                content={<InfoContent />}
+            />}
         </div>
     )
 }

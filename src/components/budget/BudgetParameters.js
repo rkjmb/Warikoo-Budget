@@ -5,7 +5,10 @@ import Switch from '@material-ui/core/Switch'
 import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider'
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 import RiskProfile from './RiskProfile'
+
+import InfoIcon from '@material-ui/icons/Info';
 
 const BudgetParameters = ({
     classes,
@@ -22,23 +25,44 @@ const BudgetParameters = ({
     viewType,
     setviewType,
     profile,
-    setprofile
+    setprofile,
+    inflation,
+    setinflation,
+    handleInfo
 }) => {
     return (
         <div className={classes.parameterWrapper}>
+            <div className='flex flex-center flex-space-between'>
+                <div className={classes.strategyWrapper}>
+                    <IconButton color="primary" className={classes.infoIcon} onClick={handleInfo}>
+                        <InfoIcon fontSize='small' />
+                    </IconButton>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                color="primary"
+                                checked={inverse}
+                                onChange={() => setinverse(!inverse)}
+                                name="inverse"
+                            />
+                        }
+                        label="Warikoo's stratergy"
+                    />
+                </div>
+                <RiskProfile profile={profile} setprofile={setprofile} />
+            </div>
             <div>
                 <FormControlLabel
                     control={
                         <Switch
                             color="primary"
-                            checked={inverse}
-                            onChange={() => setinverse(!inverse)}
-                            name="inverse"
+                            checked={inflation}
+                            onChange={() => setinflation(!inflation)}
+                            name="inflation"
                         />
                     }
-                    label="Warikoo's stratergy"
+                    label="Account for inflation"
                 />
-                <RiskProfile profile={profile} setprofile={setprofile} />
             </div>
             <div className={classes.buttonsWrapper} >
                 <Button size='small' variant={viewType.value === 'tiles' ? 'contained' : "outlined"} color="primary" onClick={() => setviewType('tiles')}>
@@ -54,9 +78,8 @@ const BudgetParameters = ({
             <div className={classes.sliders}>
                 <div>
                     <Typography id="discrete-slider" gutterBottom>
-                        {`Raise factor: ${raisefactor * 100} %`}
+                        {`Raise: ${raisefactor * 100} %`}
                     </Typography>
-
                     <Slider
                         value={raisefactor}
                         onChange={(_, newValue) => setraisefactor(newValue)}

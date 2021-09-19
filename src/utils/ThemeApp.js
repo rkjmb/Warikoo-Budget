@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles'
+import { createTheme, responsiveFontSizes } from '@material-ui/core/styles'
 import { ThemeProvider } from '@material-ui/styles'
 
 import generteThemeObject from './generateThemeObject'
@@ -11,7 +11,7 @@ const ThemeApp = ({ component: Component }) => {
         settheme(generteThemeObject())
     }, [])
 
-    let themeWithResponsiveFontSize = responsiveFontSizes(createMuiTheme(theme))
+    let themeWithResponsiveFontSize = responsiveFontSizes(createTheme(theme))
 
     return (
         <ThemeProvider theme={themeWithResponsiveFontSize}>
