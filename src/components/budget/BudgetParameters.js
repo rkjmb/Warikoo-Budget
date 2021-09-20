@@ -49,7 +49,7 @@ const BudgetParameters = ({
                         label="Warikoo's stratergy"
                     />
                 </div>
-                <RiskProfile profile={profile} setprofile={setprofile} />
+                <RiskProfile size={'medium'} profile={profile} setprofile={setprofile} />
             </div>
             <div>
                 <FormControlLabel

@@ -1,9 +1,9 @@
 import Button from '@material-ui/core/Button';
 import { profileConfig } from '../../utils/budgetService';
 
-const RiskProfile = ({ profile, setprofile }) => {
+const RiskProfile = ({ size = 'small', profile, setprofile }) => {
     return <Button
-        size='medium'
+        size={size}
         style={{ background: profileConfig[profile].color }}
         variant={'contained'}
         color="primary"

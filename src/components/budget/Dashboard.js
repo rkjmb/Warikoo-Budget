@@ -240,7 +240,7 @@ const Dashboard = ({ income, age, open, setopen, currentyear }) => {
                         <Typography className={classes.pageTitle} variant='h6' gutterBottom>{viewType.pageTitle}</Typography>
                         {viewType.value === 'graph' && <BudgetGraph classes={classes} budget={budget} currentyear={currentyear} totalEarnings={totalEarnings} maturity={maturity} />}
                         {viewType.value === 'tiles' && <BudgetTiles classes={classes} budget={budget} currentyear={currentyear} />}
-                        {viewType.value === 'portfolio' && <Portfolio classes={classes} budget={budget} profile={profile} currentyear={currentyear} />}
+                        {viewType.value === 'portfolio' && <Portfolio classes={classes} budget={budget} profile={profile} setprofile={handleSetprofile} currentyear={currentyear} />}
                     </Container>
                 </DialogContent>
             </Dialog>

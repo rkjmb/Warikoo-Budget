@@ -6,7 +6,14 @@ import PortfolioTiles from './PortfolioTiles';
 
 import Typography from '@material-ui/core/Typography';
 
-const Portfolio = ({ classes, profile, budget, currentyear }) => {
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+import RiskProfile from './RiskProfile'
+
+const Portfolio = ({ classes, profile, setprofile, budget, currentyear }) => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const renderLabel = function (entry) {
         return `${entry.value}%`;
@@ -14,6 +21,10 @@ const Portfolio = ({ classes, profile, budget, currentyear }) => {
 
     return (
         <div>
+            {isMobile && <>
+                <Typography display='inline' variant={'subtitle2'} color={'primary'} gutterBottom>Risk : </Typography>
+                <RiskProfile size={'small'} profile={profile} setprofile={setprofile} />
+            </>}
             <div className={classes.pieChartWrapper}>
                 <PieChart width={350} height={350}>
                     <Pie data={portfolio[profile]} dataKey="value" cx="50%" cy="50%" label={renderLabel}>
