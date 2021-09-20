@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell } from 'recharts';
 
 const COLORS = ['#FF8042', '#FFBB28', '#00C49F'];
 

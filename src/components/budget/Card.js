@@ -7,7 +7,7 @@ const COLORS = ['#FF8042', '#FFBB28', '#00C49F'];
 
 const Card = ({ type, title, data, color }) => {
     return (
-        <div style={{ ...styles, background: color || COLORS[type % COLORS.length] || '#fca311' }}>
+        <div style={{ ...styles, background: color || COLORS[type % COLORS.length] || '#fca311', textTransform: 'capitalize' }}>
             <p>{title || 'Card'}</p>
 
             <p>{data ? <NumberFormat value={data} thousandsGroupStyle='lakh'

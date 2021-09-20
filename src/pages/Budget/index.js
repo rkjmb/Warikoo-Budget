@@ -144,7 +144,7 @@ const Budget = () => {
                     </IconButton>
                 </div>
             </div>
-            <Dashboard income={income} age={currentyear - moment(selectedDate).year()} currentyear={currentyear} open={dashboard} setopen={setdashboard} />
+            <Dashboard income={income} age={currentyear - moment(selectedDate).year()} currentyear={currentyear} open={dashboard} setopen={setdashboard} setcurrentyear={setcurrentyear} />
             <footer>
                 <div className='flex flex-center'>
                     <Typography variant={'subtitle2'} gutterBottom>Developed by Rajkumar</Typography>
@@ -156,8 +156,6 @@ const Budget = () => {
                     <IconButton color="primary" className={classes.socialicons} onClick={() => handleRedirect(instaLink)}>
                         <InstagramIcon style={{ color: '#000000' }} fontSize='large' />
                     </IconButton>
-
-
                 </div>
             </footer>
         </div>

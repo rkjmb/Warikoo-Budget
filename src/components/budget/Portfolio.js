@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend } from 'recharts';
+import { PieChart, Pie, Tooltip, Cell, Legend } from 'recharts';
 
 import { portfolio, colorConfig } from '../../utils/budgetService';
 import PortfolioTiles from './PortfolioTiles';

@@ -1,7 +1,7 @@
 
 
 import React, { memo } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar } from 'recharts';
 
 import { colorConfig } from '../../utils/budgetService';
 import NumberFormat from 'react-number-format';
